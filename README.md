@@ -1,168 +1,127 @@
-# An MCP-based Chatbot
+# Um Chatbot Baseado em MCP
 
-(English | [中文](README_zh.md) | [日本語](README_ja.md))
+## Introdução
 
-## Introduction
+👉 [Humano: Dá uma câmera para a IA vs IA: Descobre instantaneamente que o dono não lava o cabelo há três dias【bilibili】](https://www.bilibili.com/video/BV1bpjgzKEhd/)
 
-👉 [Human: Give AI a camera vs AI: Instantly finds out the owner hasn't washed hair for three days【bilibili】](https://www.bilibili.com/video/BV1bpjgzKEhd/)
+👉 [Crie sua namorada IA artesanalmente, guia para iniciantes【bilibili】](https://www.bilibili.com/video/BV1XnmFYLEJN/)
 
-👉 [Handcraft your AI girlfriend, beginner's guide【bilibili】](https://www.bilibili.com/video/BV1XnmFYLEJN/)
+Como uma interface de interação por voz, o chatbot XiaoZhi AI utiliza os recursos de IA de grandes modelos como Qwen / DeepSeek e realiza controle multi-terminal por meio do protocolo MCP.
 
-As a voice interaction entry, the XiaoZhi AI chatbot leverages the AI capabilities of large models like Qwen / DeepSeek, and achieves multi-terminal control via the MCP protocol.
+<img src="docs/mcp-based-graph.jpg" alt="Controle tudo via MCP" width="320">
 
-<img src="docs/mcp-based-graph.jpg" alt="Control everything via MCP" width="320">
+## Notas da Versão
 
-## Version Notes
+A versão atual v2 é incompatível com a tabela de partições da v1, portanto não é possível atualizar da v1 para a v2 via OTA. Para detalhes sobre a tabela de partições, consulte [partitions/v2/README.md](partitions/v2/README.md).
 
-The current v2 version is incompatible with the v1 partition table, so it is not possible to upgrade from v1 to v2 via OTA. For partition table details, see [partitions/v2/README.md](partitions/v2/README.md).
+Todo hardware que executa a v1 pode ser atualizado para a v2 por meio de gravação manual do firmware.
 
-All hardware running v1 can be upgraded to v2 by manually flashing the firmware.
+A versão estável da v1 é 1.9.2. Você pode alternar para a v1 executando `git checkout v1`. O branch v1 será mantido até fevereiro de 2026.
 
-The stable version of v1 is 1.9.2. You can switch to v1 by running `git checkout v1`. The v1 branch will be maintained until February 2026.
+### Recursos Implementados
 
-### Features Implemented
-
-- Wi-Fi / ML307 Cat.1 4G
-- Offline voice wake-up [ESP-SR](https://github.com/espressif/esp-sr)
-- Supports two communication protocols ([Websocket](docs/websocket.md) or MQTT+UDP)
-- Uses OPUS audio codec
-- Voice interaction based on streaming ASR + LLM + TTS architecture
-- Speaker recognition, identifies the current speaker [3D Speaker](https://github.com/modelscope/3D-Speaker)
-- OLED / LCD display, supports emoji display
-- Battery display and power management
-- Multi-language support (Chinese, English, Japanese)
-- Supports ESP32-C3, ESP32-S3, ESP32-P4 chip platforms
-- Device-side MCP for device control (Speaker, LED, Servo, GPIO, etc.)
-- Cloud-side MCP to extend large model capabilities (smart home control, PC desktop operation, knowledge search, email, etc.)
-- Customizable wake words, fonts, emojis, and chat backgrounds with online web-based editing ([Custom Assets Generator](https://github.com/78/xiaozhi-assets-generator))
+* Wi-Fi / ML307 Cat.1 4G
+* Ativação por voz offline [ESP-SR](https://github.com/espressif/esp-sr)
+* Suporte a dois protocolos de comunicação ([WebSocket](docs/websocket.md) ou MQTT+UDP)
+* Uso do codec de áudio OPUS
+* Interação por voz baseada na arquitetura de streaming ASR + LLM + TTS
+* Reconhecimento de locutor, identifica o falante atual [3D Speaker](https://github.com/modelscope/3D-Speaker)
+* Tela OLED / LCD, com suporte à exibição de emojis
+* Exibição de bateria e gerenciamento de energia
+* Suporte multilíngue (chinês, inglês, japonês)
+* Suporte às plataformas de chip ESP32-C3, ESP32-S3, ESP32-P4
+* MCP no lado do dispositivo para controle de hardware (alto-falante, LED, servo, GPIO etc.)
+* MCP no lado da nuvem para expandir as capacidades do modelo (controle de casa inteligente, operação de desktop de PC, busca de conhecimento, e-mail etc.)
+* Personalização de palavras de ativação, fontes, emojis e planos de fundo do chat com edição online via web ([Custom Assets Generator](https://github.com/78/xiaozhi-assets-generator))
 
 ## Hardware
 
-### Breadboard DIY Practice
+### Prática DIY em Protoboard
 
-See the Feishu document tutorial:
+Consulte o tutorial no documento Feishu:
 
-👉 ["XiaoZhi AI Chatbot Encyclopedia"](https://ccnphfhqs21z.feishu.cn/wiki/F5krwD16viZoF0kKkvDcrZNYnhb?from=from_copylink)
+👉 ["Enciclopédia do Chatbot XiaoZhi AI"](https://ccnphfhqs21z.feishu.cn/wiki/F5krwD16viZoF0kKkvDcrZNYnhb?from=from_copylink)
 
-Breadboard demo:
+Demonstração em protoboard:
 
-![Breadboard Demo](docs/v1/wiring2.jpg)
+![Demonstração em Protoboard](docs/v1/wiring2.jpg)
 
-### Supports 70+ Open Source Hardware (Partial List)
+### Compatível com 70+ Hardwares Open Source (Lista Parcial)
 
-- <a href="https://oshwhub.com/li-chuang-kai-fa-ban/li-chuang-shi-zhan-pai-esp32-s3-kai-fa-ban" target="_blank" title="LiChuang ESP32-S3 Development Board">LiChuang ESP32-S3 Development Board</a>
-- <a href="https://github.com/espressif/esp-box" target="_blank" title="Espressif ESP32-S3-BOX3">Espressif ESP32-S3-BOX3</a>
-- <a href="https://docs.m5stack.com/zh_CN/core/CoreS3" target="_blank" title="M5Stack CoreS3">M5Stack CoreS3</a>
-- <a href="https://docs.m5stack.com/en/atom/Atomic%20Echo%20Base" target="_blank" title="AtomS3R + Echo Base">M5Stack AtomS3R + Echo Base</a>
-- <a href="https://gf.bilibili.com/item/detail/1108782064" target="_blank" title="Magic Button 2.4">Magic Button 2.4</a>
-- <a href="https://www.waveshare.net/shop/ESP32-S3-Touch-AMOLED-1.8.htm" target="_blank" title="Waveshare ESP32-S3-Touch-AMOLED-1.8">Waveshare ESP32-S3-Touch-AMOLED-1.8</a>
-- <a href="https://github.com/Xinyuan-LilyGO/T-Circle-S3" target="_blank" title="LILYGO T-Circle-S3">LILYGO T-Circle-S3</a>
-- <a href="https://oshwhub.com/tenclass01/xmini_c3" target="_blank" title="XiaGe Mini C3">XiaGe Mini C3</a>
-- <a href="https://oshwhub.com/movecall/cuican-ai-pendant-lights-up-y" target="_blank" title="Movecall CuiCan ESP32S3">CuiCan AI Pendant</a>
-- <a href="https://github.com/WMnologo/xingzhi-ai" target="_blank" title="WMnologo-Xingzhi-1.54">WMnologo-Xingzhi-1.54TFT</a>
-- <a href="https://www.seeedstudio.com/SenseCAP-Watcher-W1-A-p-5979.html" target="_blank" title="SenseCAP Watcher">SenseCAP Watcher</a>
-- <a href="https://www.bilibili.com/video/BV1BHJtz6E2S/" target="_blank" title="ESP-HI Low Cost Robot Dog">ESP-HI Low Cost Robot Dog</a>
-
-<div style="display: flex; justify-content: space-between;">
-  <a href="docs/v1/lichuang-s3.jpg" target="_blank" title="LiChuang ESP32-S3 Development Board">
-    <img src="docs/v1/lichuang-s3.jpg" width="240" />
-  </a>
-  <a href="docs/v1/espbox3.jpg" target="_blank" title="Espressif ESP32-S3-BOX3">
-    <img src="docs/v1/espbox3.jpg" width="240" />
-  </a>
-  <a href="docs/v1/m5cores3.jpg" target="_blank" title="M5Stack CoreS3">
-    <img src="docs/v1/m5cores3.jpg" width="240" />
-  </a>
-  <a href="docs/v1/atoms3r.jpg" target="_blank" title="AtomS3R + Echo Base">
-    <img src="docs/v1/atoms3r.jpg" width="240" />
-  </a>
-  <a href="docs/v1/magiclick.jpg" target="_blank" title="Magic Button 2.4">
-    <img src="docs/v1/magiclick.jpg" width="240" />
-  </a>
-  <a href="docs/v1/waveshare.jpg" target="_blank" title="Waveshare ESP32-S3-Touch-AMOLED-1.8">
-    <img src="docs/v1/waveshare.jpg" width="240" />
-  </a>
-  <a href="docs/v1/lilygo-t-circle-s3.jpg" target="_blank" title="LILYGO T-Circle-S3">
-    <img src="docs/v1/lilygo-t-circle-s3.jpg" width="240" />
-  </a>
-  <a href="docs/v1/xmini-c3.jpg" target="_blank" title="XiaGe Mini C3">
-    <img src="docs/v1/xmini-c3.jpg" width="240" />
-  </a>
-  <a href="docs/v1/movecall-cuican-esp32s3.jpg" target="_blank" title="CuiCan">
-    <img src="docs/v1/movecall-cuican-esp32s3.jpg" width="240" />
-  </a>
-  <a href="docs/v1/wmnologo_xingzhi_1.54.jpg" target="_blank" title="WMnologo-Xingzhi-1.54">
-    <img src="docs/v1/wmnologo_xingzhi_1.54.jpg" width="240" />
-  </a>
-  <a href="docs/v1/sensecap_watcher.jpg" target="_blank" title="SenseCAP Watcher">
-    <img src="docs/v1/sensecap_watcher.jpg" width="240" />
-  </a>
-  <a href="docs/v1/esp-hi.jpg" target="_blank" title="ESP-HI Low Cost Robot Dog">
-    <img src="docs/v1/esp-hi.jpg" width="240" />
-  </a>
-</div>
+* LiChuang ESP32-S3 Development Board
+* Espressif ESP32-S3-BOX3
+* M5Stack CoreS3
+* M5Stack AtomS3R + Echo Base
+* Magic Button 2.4
+* Waveshare ESP32-S3-Touch-AMOLED-1.8
+* LILYGO T-Circle-S3
+* XiaGe Mini C3
+* CuiCan AI Pendant
+* WMnologo-Xingzhi-1.54TFT
+* SenseCAP Watcher
+* ESP-HI Low Cost Robot Dog
 
 ## Software
 
-### Firmware Flashing
+### Gravação de Firmware
 
-For beginners, it is recommended to use the firmware that can be flashed without setting up a development environment.
+Para iniciantes, recomenda-se utilizar o firmware que pode ser gravado sem configurar um ambiente de desenvolvimento.
 
-The firmware connects to the official [xiaozhi.me](https://xiaozhi.me) server by default. Personal users can register an account to use the Qwen real-time model for free.
+O firmware conecta-se por padrão ao servidor oficial [xiaozhi.me](https://xiaozhi.me). Usuários individuais podem registrar uma conta para usar gratuitamente o modelo em tempo real Qwen.
 
-👉 [Beginner's Firmware Flashing Guide](https://ccnphfhqs21z.feishu.cn/wiki/Zpz4wXBtdimBrLk25WdcXzxcnNS)
+👉 [Guia para Iniciantes: Gravação de Firmware](https://ccnphfhqs21z.feishu.cn/wiki/Zpz4wXBtdimBrLk25WdcXzxcnNS)
 
-### Development Environment
+### Ambiente de Desenvolvimento
 
-- Cursor or VSCode
-- Install ESP-IDF plugin, select SDK version 5.4 or above
-- Linux is better than Windows for faster compilation and fewer driver issues
-- This project uses Google C++ code style, please ensure compliance when submitting code
+* Cursor ou VSCode
+* Instalar o plugin ESP-IDF, selecionar versão do SDK 5.4 ou superior
+* Linux é melhor que Windows para compilação mais rápida e menos problemas de driver
+* Este projeto utiliza o padrão de código Google C++, certifique-se de segui-lo ao enviar código
 
-### Developer Documentation
+### Documentação para Desenvolvedores
 
-- [Custom Board Guide](docs/custom-board.md) - Learn how to create custom boards for XiaoZhi AI
-- [MCP Protocol IoT Control Usage](docs/mcp-usage.md) - Learn how to control IoT devices via MCP protocol
-- [MCP Protocol Interaction Flow](docs/mcp-protocol.md) - Device-side MCP protocol implementation
-- [MQTT + UDP Hybrid Communication Protocol Document](docs/mqtt-udp.md)
-- [A detailed WebSocket communication protocol document](docs/websocket.md)
+* [Guia de Placa Personalizada](docs/custom-board.md) – Aprenda a criar placas personalizadas para o XiaoZhi AI
+* [Uso do Protocolo MCP para Controle IoT](docs/mcp-usage.md) – Aprenda a controlar dispositivos IoT via protocolo MCP
+* [Fluxo de Interação do Protocolo MCP](docs/mcp-protocol.md) – Implementação do protocolo MCP no lado do dispositivo
+* [Documento do Protocolo de Comunicação Híbrido MQTT + UDP](docs/mqtt-udp.md)
+* [Documento detalhado do protocolo de comunicação WebSocket](docs/websocket.md)
 
-## Large Model Configuration
+## Configuração de Grandes Modelos
 
-If you already have a XiaoZhi AI chatbot device and have connected to the official server, you can log in to the [xiaozhi.me](https://xiaozhi.me) console for configuration.
+Se você já possui um dispositivo XiaoZhi AI conectado ao servidor oficial, pode acessar o console em [xiaozhi.me](https://xiaozhi.me) para configurar.
 
-👉 [Backend Operation Video Tutorial (Old Interface)](https://www.bilibili.com/video/BV1jUCUY2EKM/)
+👉 [Tutorial em Vídeo de Operação do Backend (Interface Antiga)](https://www.bilibili.com/video/BV1jUCUY2EKM/)
 
-## Related Open Source Projects
+## Projetos Open Source Relacionados
 
-For server deployment on personal computers, refer to the following open-source projects:
+Para implantar o servidor em um computador pessoal, consulte os seguintes projetos open source:
 
-- [xinnan-tech/xiaozhi-esp32-server](https://github.com/xinnan-tech/xiaozhi-esp32-server) Python server
-- [joey-zhou/xiaozhi-esp32-server-java](https://github.com/joey-zhou/xiaozhi-esp32-server-java) Java server
-- [AnimeAIChat/xiaozhi-server-go](https://github.com/AnimeAIChat/xiaozhi-server-go) Golang server
-- [hackers365/xiaozhi-esp32-server-golang](https://github.com/hackers365/xiaozhi-esp32-server-golang) Golang server
+* xinnan-tech/xiaozhi-esp32-server (Servidor Python)
+* joey-zhou/xiaozhi-esp32-server-java (Servidor Java)
+* AnimeAIChat/xiaozhi-server-go (Servidor Golang)
+* hackers365/xiaozhi-esp32-server-golang (Servidor Golang)
 
-Other client projects using the XiaoZhi communication protocol:
+Outros projetos cliente que utilizam o protocolo de comunicação XiaoZhi:
 
-- [huangjunsen0406/py-xiaozhi](https://github.com/huangjunsen0406/py-xiaozhi) Python client
-- [TOM88812/xiaozhi-android-client](https://github.com/TOM88812/xiaozhi-android-client) Android client
-- [100askTeam/xiaozhi-linux](http://github.com/100askTeam/xiaozhi-linux) Linux client by 100ask
-- [78/xiaozhi-sf32](https://github.com/78/xiaozhi-sf32) Bluetooth chip firmware by Sichuan
-- [QuecPython/solution-xiaozhiAI](https://github.com/QuecPython/solution-xiaozhiAI) QuecPython firmware by Quectel
+* huangjunsen0406/py-xiaozhi (Cliente Python)
+* TOM88812/xiaozhi-android-client (Cliente Android)
+* 100askTeam/xiaozhi-linux (Cliente Linux da 100ask)
+* 78/xiaozhi-sf32 (Firmware para chip Bluetooth da Sichuan)
+* QuecPython/solution-xiaozhiAI (Firmware QuecPython da Quectel)
 
-Custom Assets Tools:
+Ferramentas para Recursos Personalizados:
 
-- [78/xiaozhi-assets-generator](https://github.com/78/xiaozhi-assets-generator) Custom Assets Generator (Wake words, fonts, emojis, backgrounds)
+* 78/xiaozhi-assets-generator – Gerador de Recursos Personalizados (palavras de ativação, fontes, emojis, planos de fundo)
 
-## About the Project
+## Sobre o Projeto
 
-This is an open-source ESP32 project, released under the MIT license, allowing anyone to use it for free, including for commercial purposes.
+Este é um projeto open source para ESP32, lançado sob a licença MIT, permitindo que qualquer pessoa o utilize gratuitamente, inclusive para fins comerciais.
 
-We hope this project helps everyone understand AI hardware development and apply rapidly evolving large language models to real hardware devices.
+Esperamos que este projeto ajude todos a compreender o desenvolvimento de hardware com IA e a aplicar rapidamente modelos de linguagem de grande porte em dispositivos físicos reais.
 
-If you have any ideas or suggestions, please feel free to raise Issues or join our [Discord](https://discord.gg/bXqgAfRm) or QQ group: 994694848
+Se você tiver ideias ou sugestões, sinta-se à vontade para abrir uma Issue ou participar do nosso [Discord](https://discord.gg/bXqgAfRm) ou grupo QQ: 994694848
 
-## Star History
+## Histórico de Stars
 
 <a href="https://star-history.com/#78/xiaozhi-esp32&Date">
  <picture>
