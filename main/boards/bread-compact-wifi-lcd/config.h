@@ -11,12 +11,30 @@
 
 #ifdef AUDIO_I2S_METHOD_SIMPLEX
 
-#define AUDIO_I2S_MIC_GPIO_WS   GPIO_NUM_4
-#define AUDIO_I2S_MIC_GPIO_SCK  GPIO_NUM_5
-#define AUDIO_I2S_MIC_GPIO_DIN  GPIO_NUM_6
+// Speaker I2S pins
+#define AUDIO_I2S_SPK_GPIO_BCLK GPIO_NUM_4
+#define AUDIO_I2S_SPK_GPIO_LRCK GPIO_NUM_5
 #define AUDIO_I2S_SPK_GPIO_DOUT GPIO_NUM_7
-#define AUDIO_I2S_SPK_GPIO_BCLK GPIO_NUM_15
-#define AUDIO_I2S_SPK_GPIO_LRCK GPIO_NUM_16
+
+// Microphone I2S pins
+#define AUDIO_I2S_MIC_GPIO_SCK  GPIO_NUM_11
+#define AUDIO_I2S_MIC_GPIO_WS   GPIO_NUM_10
+#define AUDIO_I2S_MIC_GPIO_DIN  GPIO_NUM_6
+
+// LCD ST7789 240x240 7PIN (sem CS e BL fixo em 3V3)
+#define DISPLAY_MOSI_PIN      GPIO_NUM_8
+#define DISPLAY_CLK_PIN       GPIO_NUM_9
+#define DISPLAY_DC_PIN        GPIO_NUM_12
+#define DISPLAY_RST_PIN       GPIO_NUM_13
+#define DISPLAY_CS_PIN        GPIO_NUM_NC   // sem CS no módulo 7PIN
+#define DISPLAY_BACKLIGHT_PIN GPIO_NUM_NC   // BL ligado direto em 3V3
+
+//#define DISPLAY_BACKLIGHT_PIN GPIO_NUM_15  // Ajustado para evitar conflito
+//#define DISPLAY_MOSI_PIN      GPIO_NUM_11  // Seu pino
+//#define DISPLAY_CLK_PIN       GPIO_NUM_12  // Seu pino
+//#define DISPLAY_DC_PIN        GPIO_NUM_13  // Ajustado para evitar conflito
+//#define DISPLAY_RST_PIN       GPIO_NUM_14  // Ajustado para evitar conflito
+//#define DISPLAY_CS_PIN        GPIO_NUM_10  // Seu pino
 
 #else
 
@@ -33,14 +51,6 @@
 #define TOUCH_BUTTON_GPIO       GPIO_NUM_NC
 #define VOLUME_UP_BUTTON_GPIO   GPIO_NUM_NC
 #define VOLUME_DOWN_BUTTON_GPIO GPIO_NUM_NC
-
-
-#define DISPLAY_BACKLIGHT_PIN GPIO_NUM_42
-#define DISPLAY_MOSI_PIN      GPIO_NUM_47
-#define DISPLAY_CLK_PIN       GPIO_NUM_21
-#define DISPLAY_DC_PIN        GPIO_NUM_40
-#define DISPLAY_RST_PIN       GPIO_NUM_45
-#define DISPLAY_CS_PIN        GPIO_NUM_41
 
 
 #ifdef CONFIG_LCD_ST7789_240X320

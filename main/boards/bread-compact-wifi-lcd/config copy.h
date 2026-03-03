@@ -1,0 +1,50 @@
+#ifndef _BOARD_CONFIG_H_
+#define _BOARD_CONFIG_H_
+
+#include <driver/gpio.h>
+
+#define AUDIO_INPUT_SAMPLE_RATE  16000
+#define AUDIO_OUTPUT_SAMPLE_RATE 24000
+
+// Desabilitar áudio se não estiver usando
+// #define AUDIO_I2S_METHOD_SIMPLEX
+
+// Se for usar áudio (MAX98357A + MS3625), descomente e ajuste:
+#ifdef AUDIO_I2S_METHOD_SIMPLEX
+#define AUDIO_I2S_MIC_GPIO_WS   GPIO_NUM_4
+#define AUDIO_I2S_MIC_GPIO_SCK  GPIO_NUM_5
+#define AUDIO_I2S_MIC_GPIO_DIN  GPIO_NUM_6
+#define AUDIO_I2S_SPK_GPIO_DOUT GPIO_NUM_7
+#define AUDIO_I2S_SPK_GPIO_BCLK GPIO_NUM_15
+#define AUDIO_I2S_SPK_GPIO_LRCK GPIO_NUM_16
+#endif
+
+#define BUILTIN_LED_GPIO        GPIO_NUM_NC
+#define BOOT_BUTTON_GPIO        GPIO_NUM_0
+#define TOUCH_BUTTON_GPIO       GPIO_NUM_NC
+#define VOLUME_UP_BUTTON_GPIO   GPIO_NUM_NC
+#define VOLUME_DOWN_BUTTON_GPIO GPIO_NUM_NC
+
+// Configuração do LCD IPS 1.54" ST7789
+#define DISPLAY_BACKLIGHT_PIN GPIO_NUM_5
+#define DISPLAY_MOSI_PIN      GPIO_NUM_11
+#define DISPLAY_CLK_PIN       GPIO_NUM_12
+#define DISPLAY_DC_PIN        GPIO_NUM_7
+#define DISPLAY_RST_PIN       GPIO_NUM_6
+#define DISPLAY_CS_PIN        GPIO_NUM_10
+
+// Configuração ST7789 240x240
+#define LCD_TYPE_ST7789_SERIAL
+#define DISPLAY_WIDTH   240
+#define DISPLAY_HEIGHT  240
+#define DISPLAY_MIRROR_X false
+#define DISPLAY_MIRROR_Y false
+#define DISPLAY_SWAP_XY false
+#define DISPLAY_INVERT_COLOR    true
+#define DISPLAY_RGB_ORDER  LCD_RGB_ELEMENT_ORDER_RGB
+#define DISPLAY_OFFSET_X  0
+#define DISPLAY_OFFSET_Y  0
+#define DISPLAY_BACKLIGHT_OUTPUT_INVERT false
+#define DISPLAY_SPI_MODE 0
+
+#endif // _BOARD_CONFIG_H_

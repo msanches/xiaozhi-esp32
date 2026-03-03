@@ -122,26 +122,30 @@ choice BOARD_TYPE
     default BOARD_TYPE_BREAD_COMPACT_WIFI
     help
         Board type. 开发板类型
+    config ESP32_S3_SUPER_MINI_LCD_1_54
+        bool "ESP32-S3-Super-Mini-LCD-1.54"
+        depends on IDF_TARGET_ESP32S3    
+   
     config BOARD_TYPE_BREAD_COMPACT_WIFI
-        bool "Bread Compact WiFi (面包板)"
+        bool "Bread Compact WiFi (Placa de teste)"
         depends on IDF_TARGET_ESP32S3
     config BOARD_TYPE_BREAD_COMPACT_WIFI_LCD
-        bool "Bread Compact WiFi + LCD (面包板)"
+        bool "Bread Compact WiFi + LCD (Placa de teste)"
         depends on IDF_TARGET_ESP32S3
     config BOARD_TYPE_BREAD_COMPACT_WIFI_CAM
-        bool "Bread Compact WiFi + LCD + Camera (面包板)"
+        bool "Bread Compact WiFi + LCD + Camera (Placa de teste)"
         depends on IDF_TARGET_ESP32S3     
     config BOARD_TYPE_BREAD_COMPACT_ML307
-        bool "Bread Compact ML307/EC801E (面包板 4G)"
+        bool "Bread Compact ML307/EC801E (Placa de teste 4G)"
         depends on IDF_TARGET_ESP32S3
     config BOARD_TYPE_BREAD_COMPACT_NT26
-        bool "Bread Compact NT26 (面包板 4G)"
+        bool "Bread Compact NT26 (Placa de teste 4G)"
         depends on IDF_TARGET_ESP32S3
     config BOARD_TYPE_BREAD_COMPACT_ESP32
-        bool "Bread Compact ESP32 DevKit (面包板)"
+        bool "Bread Compact ESP32 DevKit (Placa de teste)"
         depends on IDF_TARGET_ESP32
     config BOARD_TYPE_BREAD_COMPACT_ESP32_LCD
-        bool "Bread Compact ESP32 DevKit + LCD (面包板)"
+        bool "Bread Compact ESP32 DevKit + LCD (Placa de teste)"
         depends on IDF_TARGET_ESP32
     config BOARD_TYPE_XMINI_C3_V3
         bool "Xmini C3 V3"
@@ -201,7 +205,7 @@ choice BOARD_TYPE
         bool "Kevin SP V4"
         depends on IDF_TARGET_ESP32S3
     config BOARD_TYPE_KEVIN_YUYING_313LCD
-        bool "鱼鹰科技 3.13LCD"
+        bool "Tecnologia Osprey 3.13LCD"
         depends on IDF_TARGET_ESP32S3
     config BOARD_TYPE_CGC
         bool "CGC"
@@ -210,16 +214,16 @@ choice BOARD_TYPE
         bool "CGC 144"
         depends on IDF_TARGET_ESP32
     config BOARD_TYPE_LICHUANG_DEV_S3
-        bool "立创·实战派 ESP32-S3"
+        bool "LCSC - Abordagem Prática ESP32-S3"
         depends on IDF_TARGET_ESP32S3
     config BOARD_TYPE_LICHUANG_DEV_C3
-        bool "立创·实战派 ESP32-C3"
+        bool "LCSC - Abordagem Prática  ESP32-C3"
         depends on IDF_TARGET_ESP32C3
     config BOARD_TYPE_DF_K10
         bool "DFRobot 行空板 k10"
         depends on IDF_TARGET_ESP32S3
     config BOARD_TYPE_DF_S3_AI_CAM
-        bool "DFRobot ESP32-S3 AI智能摄像头模块"
+        bool "DFRobot ESP32-S3 AI Módulo de câmera inteligente"
         depends on IDF_TARGET_ESP32S3
     config BOARD_TYPE_MAGICLICK_S3_2P4
         bool "神奇按钮 Magiclick_2.4"
