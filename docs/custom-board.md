@@ -1,44 +1,44 @@
-# 自定义开发板指南
+# Guia de Placa Personalizada 
 
-本指南介绍如何为小智AI语音聊天机器人项目定制一个新的开发板初始化程序。小智AI支持70多种ESP32系列开发板，每个开发板的初始化代码都放在对应的目录下。
+Este guia apresenta como personalizar um novo programa de inicialização de placa para o projeto de robô de conversação por voz com IA Xiaozhi. O Xiaozhi AI suporta mais de 70 tipos de placas de desenvolvimento da série ESP32, com o código de inicialização de cada placa localizado no diretório correspondente.
 
-## 重要提示
+## Aviso Importante
 
-> **警告**: 对于自定义开发板，当IO配置与原有开发板不同时，切勿直接覆盖原有开发板的配置编译固件。必须创建新的开发板类型，或者通过config.json文件中的builds配置不同的name和sdkconfig宏定义来区分。使用 `python scripts/release.py [开发板目录名字]` 来编译打包固件。
+> **Atenção**: Para placas personalizadas, quando a configuração de IO for diferente da placa original, NUNCA sobrescreva diretamente a configuração da placa original para compilar o firmware. Você DEVE criar um novo tipo de placa, ou diferenciá-la através das configurações de name e definições de macro sdkconfig no arquivo config.json. Use `python scripts/release.py [nome-do-diretório-da-placa]` para compilar e empacotar o firmware.
 >
-> 如果直接覆盖原有配置，将来OTA升级时，您的自定义固件可能会被原有开发板的标准固件覆盖，导致您的设备无法正常工作。每个开发板有唯一的标识和对应的固件升级通道，保持开发板标识的唯一性非常重要。
+> Se você sobrescrever diretamente a configuração original, durante futuras atualizações OTA, seu firmware personalizado poderá ser substituído pelo firmware padrão da placa original, fazendo com que seu dispositivo não funcione corretamente. Cada placa tem um identificador único e um canal de atualização de firmware correspondente, manter a unicidade do identificador da placa é muito importante.
 
-## 目录结构
+## Estrutura de Diretórios
 
-每个开发板的目录结构通常包含以下文件：
+A estrutura de diretórios de cada placa geralmente contém os seguintes arquivos:
 
-- `xxx_board.cc` - 主要的板级初始化代码，实现了板子相关的初始化和功能
-- `config.h` - 板级配置文件，定义了硬件管脚映射和其他配置项
-- `config.json` - 编译配置，指定目标芯片和特殊的编译选项
-- `README.md` - 开发板相关的说明文档
+- `xxx_board.cc` - Código principal de inicialização da placa, implementa a inicialização e funcionalidades relacionadas à placa
+- `config.h` - Arquivo de configuração da placa, define o mapeamento de pinos de hardware e outros itens de configuração
+- `config.json` - Configuração de compilação, especifica o chip alvo e opções especiais de compilação
+- `README.md` - Documento de instruções relacionado à placa de desenvolvimento
 
-## 定制开发板步骤
+## Passos para Personalizar uma Placa
 
-### 1. 创建新的开发板目录
+### 1. Criar um Novo Diretório de Placa
 
-首先在`boards/`目录下创建一个新的目录，命名方式应使用 `[品牌名]-[开发板类型]` 的形式，例如 `m5stack-tab5`：
+Primeiro, crie um novo diretório no diretório `boards/`, o nome deve usar o formato `[marca]-[tipo-de-placa]`, por exemplo `m5stack-tab5`:
 
 ```bash
 mkdir main/boards/my-custom-board
 ```
 
-### 2. 创建配置文件
+### 2. Criar Arquivos de Configuração
 
 #### config.h
 
-在`config.h`中定义所有的硬件配置，包括:
+No `config.h` defina todas as configurações de hardware, incluindo:
 
-- 音频采样率和I2S引脚配置
-- 音频编解码芯片地址和I2C引脚配置
-- 按钮和LED引脚配置
-- 显示屏参数和引脚配置
+- Taxa de amostragem de áudio e configuração de pinos I2S
+- Endereço do chip de codec de áudio e configuração de pinos I2C
+- Configuração de pinos de botões e LEDs
+- Parâmetros da tela e configuração de pinos
 
-参考示例（来自lichuang-c3-dev）：
+Exemplo de referência (de lichuang-c3-dev):
 
 ```c
 #ifndef _BOARD_CONFIG_H_
@@ -46,7 +46,7 @@ mkdir main/boards/my-custom-board
 
 #include <driver/gpio.h>
 
-// 音频配置
+// Configuração de áudio
 #define AUDIO_INPUT_SAMPLE_RATE  24000
 #define AUDIO_OUTPUT_SAMPLE_RATE 24000
 
@@ -61,10 +61,10 @@ mkdir main/boards/my-custom-board
 #define AUDIO_CODEC_I2C_SCL_PIN  GPIO_NUM_1
 #define AUDIO_CODEC_ES8311_ADDR  ES8311_CODEC_DEFAULT_ADDR
 
-// 按钮配置
+// Configuração de botões
 #define BOOT_BUTTON_GPIO        GPIO_NUM_9
 
-// 显示屏配置
+// Configuração da tela
 #define DISPLAY_SPI_SCK_PIN     GPIO_NUM_3
 #define DISPLAY_SPI_MOSI_PIN    GPIO_NUM_5
 #define DISPLAY_DC_PIN          GPIO_NUM_6
@@ -87,18 +87,18 @@ mkdir main/boards/my-custom-board
 
 #### config.json
 
-在`config.json`中定义编译配置，这个文件用于 `scripts/release.py` 脚本自动化编译：
+No `config.json` defina a configuração de compilação, este arquivo é usado para compilação automatizada pelo script `scripts/release.py`:
 
 ```json
 {
-    "target": "esp32s3",  // 目标芯片型号: esp32, esp32s3, esp32c3, esp32c6, esp32p4等
+    "target": "esp32s3",  // Modelo do chip alvo: esp32, esp32s3, esp32c3, esp32c6, esp32p4 etc
     "builds": [
         {
-            "name": "my-custom-board",  // 开发板名称，用于生成固件包
+            "name": "my-custom-board",  // Nome da placa de desenvolvimento, usado para gerar o pacote de firmware
             "sdkconfig_append": [
-                // 特别 Flash 大小配置
+                // Configuração específica de tamanho de Flash
                 "CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y",
-                // 特别分区表配置
+                // Configuração específica de tabela de partições
                 "CONFIG_PARTITION_TABLE_CUSTOM_FILENAME=\"partitions/v2/8m.csv\""
             ]
         }
@@ -106,42 +106,42 @@ mkdir main/boards/my-custom-board
 }
 ```
 
-**配置项说明：**
-- `target`: 目标芯片型号，必须与硬件匹配
-- `name`: 编译输出的固件包名称，建议与目录名一致
-- `sdkconfig_append`: 额外的 sdkconfig 配置项数组，会追加到默认配置中
+**Descrição dos itens de configuração:**
+- `target`: Modelo do chip alvo, deve corresponder ao hardware
+- `name`: Nome do pacote de firmware de saída da compilação, recomenda-se que seja consistente com o nome do diretório
+- `sdkconfig_append`: Array de itens de configuração sdkconfig adicionais, serão anexados à configuração padrão
 
-**常用的 sdkconfig_append 配置：**
+**Configurações sdkconfig_append comumente usadas:**
 ```json
-// Flash 大小
-"CONFIG_ESPTOOLPY_FLASHSIZE_4MB=y"   // 4MB Flash
-"CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y"   // 8MB Flash
-"CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y"  // 16MB Flash
+// Tamanho da Flash
+"CONFIG_ESPTOOLPY_FLASHSIZE_4MB=y"   // Flash de 4MB
+"CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y"   // Flash de 8MB
+"CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y"  // Flash de 16MB
 
-// 分区表
-"CONFIG_PARTITION_TABLE_CUSTOM_FILENAME=\"partitions/v2/4m.csv\""  // 4MB 分区表
-"CONFIG_PARTITION_TABLE_CUSTOM_FILENAME=\"partitions/v2/8m.csv\""  // 8MB 分区表
-"CONFIG_PARTITION_TABLE_CUSTOM_FILENAME=\"partitions/v2/16m.csv\"" // 16MB 分区表
+// Tabela de partições
+"CONFIG_PARTITION_TABLE_CUSTOM_FILENAME=\"partitions/v2/4m.csv\""  // Tabela de partições de 4MB
+"CONFIG_PARTITION_TABLE_CUSTOM_FILENAME=\"partitions/v2/8m.csv\""  // Tabela de partições de 8MB
+"CONFIG_PARTITION_TABLE_CUSTOM_FILENAME=\"partitions/v2/16m.csv\"" // Tabela de partições de 16MB
 
-// 语言配置
-"CONFIG_LANGUAGE_EN_US=y"  // 英语
-"CONFIG_LANGUAGE_ZH_CN=y"  // 简体中文
+// Configuração de idioma
+"CONFIG_LANGUAGE_EN_US=y"  // Inglês
+"CONFIG_LANGUAGE_ZH_CN=y"  // Chinês Simplificado
 
-// 唤醒词配置
-"CONFIG_USE_DEVICE_AEC=y"          // 启用设备端 AEC
-"CONFIG_WAKE_WORD_DISABLED=y"      // 禁用唤醒词
+// Configuração de palavra de ativação
+"CONFIG_USE_DEVICE_AEC=y"          // Habilitar AEC no dispositivo
+"CONFIG_WAKE_WORD_DISABLED=y"      // Desabilitar palavra de ativação
 ```
 
-### 3. 编写板级初始化代码
+### 3. Escrever Código de Inicialização da Placa
 
-创建一个`my_custom_board.cc`文件，实现开发板的所有初始化逻辑。
+Crie um arquivo `my_custom_board.cc`, implementando toda a lógica de inicialização da placa de desenvolvimento.
 
-一个基本的开发板类定义包含以下几个部分：
+Uma definição básica de classe de placa de desenvolvimento contém as seguintes partes:
 
-1. **类定义**：继承自`WifiBoard`或`Ml307Board`
-2. **初始化函数**：包括I2C、显示屏、按钮、IoT等组件的初始化
-3. **虚函数重写**：如`GetAudioCodec()`、`GetDisplay()`、`GetBacklight()`等
-4. **注册开发板**：使用`DECLARE_BOARD`宏注册开发板
+1. **Definição de classe**: Herda de `WifiBoard` ou `Ml307Board`
+2. **Funções de inicialização**: Incluindo inicialização de componentes como I2C, tela, botões, IoT etc
+3. **Sobrescrita de funções virtuais**: Como `GetAudioCodec()`, `GetDisplay()`, `GetBacklight()` etc
+4. **Registro da placa**: Usar a macro `DECLARE_BOARD` para registrar a placa
 
 ```cpp
 #include "wifi_board.h"
@@ -164,7 +164,7 @@ private:
     Button boot_button_;
     LcdDisplay* display_;
 
-    // I2C初始化
+    // Inicialização I2C
     void InitializeI2c() {
         i2c_master_bus_config_t i2c_bus_cfg = {
             .i2c_port = I2C_NUM_0,
@@ -181,7 +181,7 @@ private:
         ESP_ERROR_CHECK(i2c_new_master_bus(&i2c_bus_cfg, &codec_i2c_bus_));
     }
 
-    // SPI初始化（用于显示屏）
+    // Inicialização SPI (para tela)
     void InitializeSpi() {
         spi_bus_config_t buscfg = {};
         buscfg.mosi_io_num = DISPLAY_SPI_MOSI_PIN;
@@ -193,7 +193,7 @@ private:
         ESP_ERROR_CHECK(spi_bus_initialize(SPI2_HOST, &buscfg, SPI_DMA_CH_AUTO));
     }
 
-    // 按钮初始化
+    // Inicialização de botões
     void InitializeButtons() {
         boot_button_.OnClick([this]() {
             auto& app = Application::GetInstance();
@@ -205,7 +205,7 @@ private:
         });
     }
 
-    // 显示屏初始化（以ST7789为例）
+    // Inicialização da tela (exemplo com ST7789)
     void InitializeDisplay() {
         esp_lcd_panel_io_handle_t panel_io = nullptr;
         esp_lcd_panel_handle_t panel = nullptr;
@@ -232,20 +232,20 @@ private:
         esp_lcd_panel_swap_xy(panel, DISPLAY_SWAP_XY);
         esp_lcd_panel_mirror(panel, DISPLAY_MIRROR_X, DISPLAY_MIRROR_Y);
         
-        // 创建显示屏对象
+        // Criar objeto de tela
         display_ = new SpiLcdDisplay(panel_io, panel,
                                     DISPLAY_WIDTH, DISPLAY_HEIGHT, 
                                     DISPLAY_OFFSET_X, DISPLAY_OFFSET_Y, 
                                     DISPLAY_MIRROR_X, DISPLAY_MIRROR_Y, DISPLAY_SWAP_XY);
     }
 
-    // MCP Tools 初始化
+    // Inicialização de MCP Tools
     void InitializeTools() {
-        // 参考 MCP 文档
+        // Consulte a documentação MCP
     }
 
 public:
-    // 构造函数
+    // Construtor
     MyCustomBoard() : boot_button_(BOOT_BUTTON_GPIO) {
         InitializeI2c();
         InitializeSpi();
@@ -255,7 +255,7 @@ public:
         GetBacklight()->SetBrightness(100);
     }
 
-    // 获取音频编解码器
+    // Obter codec de áudio
     virtual AudioCodec* GetAudioCodec() override {
         static Es8311AudioCodec audio_codec(
             codec_i2c_bus_, 
@@ -272,182 +272,182 @@ public:
         return &audio_codec;
     }
 
-    // 获取显示屏
+    // Obter tela
     virtual Display* GetDisplay() override {
         return display_;
     }
     
-    // 获取背光控制
+    // Obter controle de backlight
     virtual Backlight* GetBacklight() override {
         static PwmBacklight backlight(DISPLAY_BACKLIGHT_PIN, DISPLAY_BACKLIGHT_OUTPUT_INVERT);
         return &backlight;
     }
 };
 
-// 注册开发板
+// Registrar placa de desenvolvimento
 DECLARE_BOARD(MyCustomBoard);
 ```
 
-### 4. 添加构建系统配置
+### 4. Adicionar Configuração do Sistema de Build
 
-#### 在 Kconfig.projbuild 中添加开发板选项
+#### Adicionar opção de placa no Kconfig.projbuild
 
-打开 `main/Kconfig.projbuild` 文件，在 `choice BOARD_TYPE` 部分添加新的开发板配置项：
+Abra o arquivo `main/Kconfig.projbuild`, na parte `choice BOARD_TYPE` adicione o novo item de configuração de placa:
 
 ```kconfig
 choice BOARD_TYPE
     prompt "Board Type"
     default BOARD_TYPE_BREAD_COMPACT_WIFI
     help
-        Board type. 开发板类型
+        Board type. Tipo de placa de desenvolvimento
     
-    # ... 其他开发板选项 ...
+    # ... outras opções de placa ...
     
     config BOARD_TYPE_MY_CUSTOM_BOARD
-        bool "My Custom Board (我的自定义开发板)"
-        depends on IDF_TARGET_ESP32S3  # 根据你的目标芯片修改
+        bool "My Custom Board (Minha placa personalizada)"
+        depends on IDF_TARGET_ESP32S3  # Modifique de acordo com seu chip alvo
 endchoice
 ```
 
-**注意事项：**
-- `BOARD_TYPE_MY_CUSTOM_BOARD` 是配置项名称，需要全大写，使用下划线分隔
-- `depends on` 指定了目标芯片类型（如 `IDF_TARGET_ESP32S3`、`IDF_TARGET_ESP32C3` 等）
-- 描述文字可以使用中英文
+**Observações:**
+- `BOARD_TYPE_MY_CUSTOM_BOARD` é o nome do item de configuração, deve estar todo em maiúsculas, usando sublinhados como separadores
+- `depends on` especifica o tipo de chip alvo (como `IDF_TARGET_ESP32S3`, `IDF_TARGET_ESP32C3` etc)
+- O texto de descrição pode usar chinês e inglês
 
-#### 在 CMakeLists.txt 中添加开发板配置
+#### Adicionar configuração de placa no CMakeLists.txt
 
-打开 `main/CMakeLists.txt` 文件，在开发板类型判断部分添加新的配置：
+Abra o arquivo `main/CMakeLists.txt`, na parte de julgamento de tipo de placa adicione a nova configuração:
 
 ```cmake
-# 在 elseif 链中添加你的开发板配置
+# Na cadeia elseif adicione a configuração de sua placa
 elseif(CONFIG_BOARD_TYPE_MY_CUSTOM_BOARD)
-    set(BOARD_TYPE "my-custom-board")  # 与目录名一致
-    set(BUILTIN_TEXT_FONT font_puhui_basic_20_4)  # 根据屏幕大小选择合适的字体
+    set(BOARD_TYPE "my-custom-board")  # Consistente com o nome do diretório
+    set(BUILTIN_TEXT_FONT font_puhui_basic_20_4)  # Escolha a fonte apropriada baseado no tamanho da tela
     set(BUILTIN_ICON_FONT font_awesome_20_4)
-    set(DEFAULT_EMOJI_COLLECTION twemoji_64)  # 可选，如果需要表情显示
+    set(DEFAULT_EMOJI_COLLECTION twemoji_64)  # Opcional, se precisar exibir emojis
 endif()
 ```
 
-**字体和表情配置说明：**
+**Explicação da configuração de fontes e emojis:**
 
-根据屏幕分辨率选择合适的字体大小：
-- 小屏幕（128x64 OLED）：`font_puhui_basic_14_1` / `font_awesome_14_1`
-- 中小屏幕（240x240）：`font_puhui_basic_16_4` / `font_awesome_16_4`
-- 中等屏幕（240x320）：`font_puhui_basic_20_4` / `font_awesome_20_4`
-- 大屏幕（480x320+）：`font_puhui_basic_30_4` / `font_awesome_30_4`
+Escolha o tamanho de fonte apropriado baseado na resolução da tela:
+- Tela pequena (128x64 OLED): `font_puhui_basic_14_1` / `font_awesome_14_1`
+- Tela média-pequena (240x240): `font_puhui_basic_16_4` / `font_awesome_16_4`
+- Tela média (240x320): `font_puhui_basic_20_4` / `font_awesome_20_4`
+- Tela grande (480x320+): `font_puhui_basic_30_4` / `font_awesome_30_4`
 
-表情集合选项：
-- `twemoji_32` - 32x32 像素表情（小屏幕）
-- `twemoji_64` - 64x64 像素表情（大屏幕）
+Opções de coleção de emojis:
+- `twemoji_32` - Emojis 32x32 pixels (tela pequena)
+- `twemoji_64` - Emojis 64x64 pixels (tela grande)
 
-### 5. 配置和编译
+### 5. Configuração e Compilação
 
-#### 方法一：使用 idf.py 手动配置
+#### Método 1: Configuração manual usando idf.py
 
-1. **设置目标芯片**（首次配置或更换芯片时）：
+1. **Definir chip alvo** (na primeira configuração ou ao trocar chip):
    ```bash
-   # 对于 ESP32-S3
+   # Para ESP32-S3
    idf.py set-target esp32s3
    
-   # 对于 ESP32-C3
+   # Para ESP32-C3
    idf.py set-target esp32c3
    
-   # 对于 ESP32
+   # Para ESP32
    idf.py set-target esp32
    ```
 
-2. **清理旧配置**：
+2. **Limpar configuração antiga**:
    ```bash
    idf.py fullclean
    ```
 
-3. **进入配置菜单**：
+3. **Entrar no menu de configuração**:
    ```bash
    idf.py menuconfig
    ```
    
-   在菜单中导航到：`Xiaozhi Assistant` -> `Board Type`，选择你的自定义开发板。
+   No menu navegue até: `Xiaozhi Assistant` -> `Board Type`, selecione sua placa personalizada.
 
-4. **编译和烧录**：
+4. **Compilar e gravar**:
    ```bash
    idf.py build
    idf.py flash monitor
    ```
 
-#### 方法二：使用 release.py 脚本（推荐）
+#### Método 2: Usando o script release.py (recomendado)
 
-如果你的开发板目录下有 `config.json` 文件，可以使用此脚本自动完成配置和编译：
+Se o diretório de sua placa possui um arquivo `config.json`, você pode usar este script para completar automaticamente a configuração e compilação:
 
 ```bash
 python scripts/release.py my-custom-board
 ```
 
-此脚本会自动：
-- 读取 `config.json` 中的 `target` 配置并设置目标芯片
-- 应用 `sdkconfig_append` 中的编译选项
-- 完成编译并打包固件
+Este script irá automaticamente:
+- Ler a configuração `target` do `config.json` e definir o chip alvo
+- Aplicar as opções de compilação de `sdkconfig_append`
+- Completar a compilação e empacotar o firmware
 
-### 6. 创建README.md
+### 6. Criar README.md
 
-在README.md中说明开发板的特性、硬件要求、编译和烧录步骤：
+No README.md, explique as características da placa, requisitos de hardware, etapas de compilação e gravação:
 
 
-## 常见开发板组件
+## Componentes Comuns de Placas de Desenvolvimento
 
-### 1. 显示屏
+### 1. Telas
 
-项目支持多种显示屏驱动，包括:
+O projeto suporta vários drivers de tela, incluindo:
 - ST7789 (SPI)
 - ILI9341 (SPI)
 - SH8601 (QSPI)
-- 等...
+- etc...
 
-### 2. 音频编解码器
+### 2. Codecs de Áudio
 
-支持的编解码器包括:
-- ES8311 (常用)
-- ES7210 (麦克风阵列)
-- AW88298 (功放)
-- 等...
+Codecs suportados incluem:
+- ES8311 (comum)
+- ES7210 (array de microfones)
+- AW88298 (amplificador)
+- etc...
 
-### 3. 电源管理
+### 3. Gerenciamento de Energia
 
-一些开发板使用电源管理芯片:
+Algumas placas usam chips de gerenciamento de energia:
 - AXP2101
-- 其他可用的PMIC
+- Outros PMICs disponíveis
 
-### 4. MCP设备控制
+### 4. Controle de Dispositivos MCP
 
-可以添加各种MCP工具，让AI能够使用:
-- Speaker (扬声器控制)
-- Screen (屏幕亮度调节)
-- Battery (电池电量读取)
-- Light (灯光控制)
-- 等...
+Você pode adicionar várias ferramentas MCP para que a IA possa usar:
+- Speaker (controle de alto-falante)
+- Screen (ajuste de brilho da tela)
+- Battery (leitura de nível de bateria)
+- Light (controle de luz)
+- etc...
 
-## 开发板类继承关系
+## Hierarquia de Herança de Classes de Placas
 
-- `Board` - 基础板级类
-  - `WifiBoard` - Wi-Fi连接的开发板
-  - `Ml307Board` - 使用4G模块的开发板
-  - `DualNetworkBoard` - 支持Wi-Fi与4G网络切换的开发板
+- `Board` - Classe base de nível de placa
+  - `WifiBoard` - Placa de desenvolvimento com conexão Wi-Fi
+  - `Ml307Board` - Placa de desenvolvimento usando módulo 4G
+  - `DualNetworkBoard` - Placa de desenvolvimento com suporte para alternância entre Wi-Fi e rede 4G
 
-## 开发技巧
+## Dicas de Desenvolvimento
 
-1. **参考相似的开发板**：如果您的新开发板与现有开发板有相似之处，可以参考现有实现
-2. **分步调试**：先实现基础功能（如显示），再添加更复杂的功能（如音频）
-3. **管脚映射**：确保在config.h中正确配置所有管脚映射
-4. **检查硬件兼容性**：确认所有芯片和驱动程序的兼容性
+1. **Referencie placas similares**: Se sua nova placa tiver similaridades com placas existentes, pode referenciar a implementação existente
+2. **Depuração passo a passo**: Implemente primeiro funcionalidades básicas (como display), depois adicione funcionalidades mais complexas (como áudio)
+3. **Mapeamento de pinos**: Certifique-se de configurar corretamente todo o mapeamento de pinos no config.h
+4. **Verifique compatibilidade de hardware**: Confirme a compatibilidade de todos os chips e drivers
 
-## 可能遇到的问题
+## Possíveis Problemas
 
-1. **显示屏不正常**：检查SPI配置、镜像设置和颜色反转设置
-2. **音频无输出**：检查I2S配置、PA使能引脚和编解码器地址
-3. **无法连接网络**：检查Wi-Fi凭据和网络配置
-4. **无法与服务器通信**：检查MQTT或WebSocket配置
+1. **Tela não funciona corretamente**: Verifique configuração SPI, configurações de espelhamento e inversão de cor
+2. **Sem saída de áudio**: Verifique configuração I2S, pino de habilitação PA e endereço do codec
+3. **Não consegue conectar à rede**: Verifique credenciais Wi-Fi e configuração de rede
+4. **Não consegue comunicar com o servidor**: Verifique configuração MQTT ou WebSocket
 
-## 参考资料
+## Materiais de Referência
 
-- ESP-IDF 文档: https://docs.espressif.com/projects/esp-idf/
-- LVGL 文档: https://docs.lvgl.io/
-- ESP-SR 文档: https://github.com/espressif/esp-sr 
+- Documentação ESP-IDF: https://docs.espressif.com/projects/esp-idf/
+- Documentação LVGL: https://docs.lvgl.io/
+- Documentação ESP-SR: https://github.com/espressif/esp-sr 
