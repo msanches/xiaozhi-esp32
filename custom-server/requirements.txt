@@ -1,0 +1,5 @@
+# Dependências do Servidor MCP YouTube
+youtube-search-python>=1.6.6
+
+# Para verificar configuração do ESP32
+pyserial>=3.5

@@ -191,10 +191,27 @@ class YouTubeMCPServer:
             
         except Exception as e:
             logger.error(f"Erro ao buscar no YouTube: {e}")
+            
+            # Modo demonstração: retornar resultados mockados
+            logger.info("Usando resultados de demonstração (modo fallback)")
+            response_text = f"🎵 Demonstração: Resultados para '{query}':\n\n"
+            response_text += "1. **Imagine Dragons - Believer**\n"
+            response_text += "   📺 Canal: ImagineDragonsVEVO\n"
+            response_text += "   ⏱️ Duração: 3:24\n"
+            response_text += "   👁️ Views: 2.5B\n"
+            response_text += "   🔗 URL: https://www.youtube.com/watch?v=7wtfhZwyrcc\n\n"
+            response_text += "2. **Imagine Dragons - Thunder**\n"
+            response_text += "   📺 Canal: ImagineDragonsVEVO\n"
+            response_text += "   ⏱️ Duração: 3:07\n"
+            response_text += "   👁️ Views: 1.8B\n"
+            response_text += "   🔗 URL: https://www.youtube.com/watch?v=fKopy74weus\n\n"
+            response_text += "\n⚠️ NOTA: Estes são resultados de demonstração.\n"
+            response_text += f"Erro real: {str(e)}"
+            
             return {
                 "content": [{
                     "type": "text",
-                    "text": f"❌ Erro ao buscar: {str(e)}"
+                    "text": response_text
                 }]
             }
     
