@@ -3,7 +3,7 @@
 AVISO: Gerado com auxílio de IA, ao implementar serviços de backend, consulte o código para confirmar os detalhes!!
 
 O protocolo MCP neste projeto é usado para comunicação entre a API de backend (cliente MCP) e o dispositivo ESP32 (servidor MCP), permitindo que o backend descubra e invoque funcionalidades (ferramentas) fornecidas pelo dispositivo.
-
+ 
 ## Formato do Protocolo
 
 De acordo com o código (`main/protocols/protocol.cc`, `main/mcp_server.cc`), as mensagens MCP são encapsuladas no corpo da mensagem do protocolo de comunicação básico (como WebSocket ou MQTT). Sua estrutura interna segue a especificação [JSON-RPC 2.0](https://www.jsonrpc.org/specification).

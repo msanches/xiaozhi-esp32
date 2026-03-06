@@ -8,7 +8,6 @@
 
 // 如果使用 Duplex I2S 模式，请注释下面一行
 #define AUDIO_I2S_METHOD_SIMPLEX
-
 #ifdef AUDIO_I2S_METHOD_SIMPLEX
 
 // Speaker I2S pins
@@ -49,13 +48,11 @@
 
 #endif
 
-
 #define BUILTIN_LED_GPIO        GPIO_NUM_48
 #define BOOT_BUTTON_GPIO        GPIO_NUM_1
 #define TOUCH_BUTTON_GPIO       GPIO_NUM_NC
 #define VOLUME_UP_BUTTON_GPIO   GPIO_NUM_NC
 #define VOLUME_DOWN_BUTTON_GPIO GPIO_NUM_NC
-
 
 #ifdef CONFIG_LCD_ST7789_240X320
 #define LCD_TYPE_ST7789_SERIAL

@@ -136,6 +136,15 @@ private:
     // 物联网初始化，添加对 AI 可见设备
     void InitializeTools() {
         static LampController lamp(LAMP_GPIO);
+        
+        auto& mcp_server = McpServer::GetInstance();
+        mcp_server.AddTool("self.system.reconfigure_wifi",
+            "End this conversation and enter WiFi configuration mode.\n"
+            "**CAUTION** You must ask the user to confirm this action.",
+            PropertyList(), [this](const PropertyList& properties) {
+                EnterWifiConfigMode();
+                return true;
+            });
     }
 
 public:

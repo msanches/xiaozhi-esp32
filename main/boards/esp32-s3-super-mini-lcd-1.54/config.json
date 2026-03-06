@@ -3,10 +3,7 @@
   "builds": [
     {
       "name": "esp32-s3-super-mini-lcd-1.54",
-      "sdkconfig_append": [
-        "CONFIG_SPIRAM=n",
-        "CONFIG_SPIRAM_SUPPORT=n"
-      ]
+      "sdkconfig_append": []
     }
   ]
 }
